@@ -16,12 +16,20 @@ class GenreSerializer(serializers.ModelSerializer):
 
 
 class PlaySerializer(serializers.ModelSerializer):
-    actor = ActorSerializer(many=True, read_only=True)
-    genre = GenreSerializer(many=True, read_only=True)
 
     class Meta:
         model = Play
-        fields = ("id", "title", "description", "actor", "genre")
+        fields = ("id", "title", "description", "actors", "genres")
+
+
+class PlayListSerializer(PlaySerializer):
+    actors = serializers.SlugRelatedField(many=True, read_only=True, slug_field="full_name")
+    genres = serializers.SlugRelatedField(many=True, read_only=True, slug_field="name")
+
+
+class PlayDetailSerializer(PlayListSerializer):
+    actors = ActorSerializer(many=True, read_only=True)
+    genres = GenreSerializer(many=True, read_only=True)
 
 
 class TheatreHallSerializer(serializers.ModelSerializer):
