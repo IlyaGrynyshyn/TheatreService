@@ -5,7 +5,8 @@ from theatre.models import (
     TheatreHall,
     Performance,
     Actor,
-    Genre
+    Genre,
+    Ticket
 )
 from theatre.serializers import (
     PlaySerializer,
@@ -16,7 +17,9 @@ from theatre.serializers import (
     PlayDetailSerializer,
     PlayListSerializer,
     PerformanceListSerializer,
-    PerformanceDetailSerializer
+    PerformanceDetailSerializer,
+    TicketSerializer,
+    TicketListSerializer
 )
 
 
@@ -56,4 +59,13 @@ class PerformanceViewSet(viewsets.ModelViewSet):
             return PerformanceListSerializer
         if self.action == "retrieve":
             return PerformanceDetailSerializer
+        return self.serializer_class
+
+class TicketViewSet(viewsets.ModelViewSet):
+    queryset = Ticket.objects.all()
+    serializer_class = TicketSerializer
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return TicketListSerializer
         return self.serializer_class
