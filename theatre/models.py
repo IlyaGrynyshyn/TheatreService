@@ -22,7 +22,7 @@ class Play(models.Model):
         ordering = ["title"]
 
 
-class Perfomance(models.Model):
+class Performance(models.Model):
     play = models.ForeignKey(Play, on_delete=models.CASCADE, related_name="performance")
     theatre_hall = models.ForeignKey(TheatreHall, on_delete=models.CASCADE, related_name="performance")
     show_time = models.DateTimeField()
@@ -57,7 +57,7 @@ class Genre(models.Model):
 class Ticket(models.Model):
     row = models.IntegerField()
     seat = models.IntegerField()
-    performance = models.ForeignKey(Perfomance, on_delete=models.CASCADE, related_name="tickets")
+    performance = models.ForeignKey(Performance, on_delete=models.CASCADE, related_name="tickets")
     reservation = models.ForeignKey("Reservation", on_delete=models.CASCADE, related_name="tickets")
 
     def __str__(self):
