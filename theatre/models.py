@@ -10,6 +10,10 @@ class TheatreHall(models.Model):
     def __str__(self):
         return self.name
 
+    @property
+    def capacity(self):
+        return self.rows * self.seats_in_row
+
 
 class Play(models.Model):
     title = models.CharField(max_length=255)
