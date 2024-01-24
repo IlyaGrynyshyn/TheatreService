@@ -14,8 +14,8 @@ class TheatreHall(models.Model):
 class Play(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
-    actor = models.ManyToManyField("Actor", related_name="performance")
-    genre = models.ManyToManyField("Genre", related_name="performance")
+    actors = models.ManyToManyField("Actor", related_name="performance")
+    genres = models.ManyToManyField("Genre", related_name="performance")
 
     def __str__(self):
         return self.title
