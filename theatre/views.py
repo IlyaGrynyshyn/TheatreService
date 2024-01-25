@@ -32,21 +32,18 @@ from theatre.serializers import (
 class ActorViewSet(viewsets.ModelViewSet):
     serializer_class = ActorSerializer
     queryset = Actor.objects.all()
-    authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
 
 class GenreViewSet(viewsets.ModelViewSet):
     serializer_class = GenreSerializer
     queryset = Genre.objects.all()
-    authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
 
 class PlayViewSet(viewsets.ModelViewSet):
     serializer_class = PlaySerializer
     queryset = Play.objects.prefetch_related("genres", "actors")
-    authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
     def get_serializer_class(self):
@@ -60,7 +57,6 @@ class PlayViewSet(viewsets.ModelViewSet):
 class TheatreHallViewSet(viewsets.ModelViewSet):
     serializer_class = TheatreHallSerializer
     queryset = TheatreHall.objects.all()
-    authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
 
@@ -72,7 +68,6 @@ class PerformanceViewSet(viewsets.ModelViewSet):
                 F("theatre_hall__rows") * F("theatre_hall__seats_in_row") - Count("tickets")
         )
     )
-    authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
     def get_serializer_class(self):
@@ -86,7 +81,6 @@ class PerformanceViewSet(viewsets.ModelViewSet):
 class TicketViewSet(viewsets.ModelViewSet):
     queryset = Ticket.objects.select_related("performance", "reservation")
     serializer_class = TicketSerializer
-    authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAdminUser,)
 
     def get_serializer_class(self):
@@ -98,7 +92,6 @@ class TicketViewSet(viewsets.ModelViewSet):
 class ReservationViewSet(viewsets.ModelViewSet):
     queryset = Reservation.objects.select_related("user")
     serializer_class = ReservationSerializer
-    authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
     def get_queryset(self):
