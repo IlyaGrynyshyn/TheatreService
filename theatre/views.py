@@ -45,7 +45,7 @@ class GenreViewSet(viewsets.ModelViewSet):
 
 class PlayViewSet(viewsets.ModelViewSet):
     serializer_class = PlaySerializer
-    queryset = Play.objects.all()
+    queryset = Play.objects.prefetch_related("genres", "actors")
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
@@ -67,7 +67,7 @@ class TheatreHallViewSet(viewsets.ModelViewSet):
 class PerformanceViewSet(viewsets.ModelViewSet):
     serializer_class = PerformanceSerializer
 
-    queryset = Performance.objects.all().annotate(
+    queryset = Performance.objects.select_related("play", "theatre_hall").annotate(
         tickets_available=(
                 F("theatre_hall__rows") * F("theatre_hall__seats_in_row") - Count("tickets")
         )
@@ -84,7 +84,7 @@ class PerformanceViewSet(viewsets.ModelViewSet):
 
 
 class TicketViewSet(viewsets.ModelViewSet):
-    queryset = Ticket.objects.all()
+    queryset = Ticket.objects.select_related("performance", "reservation")
     serializer_class = TicketSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAdminUser,)
@@ -96,7 +96,7 @@ class TicketViewSet(viewsets.ModelViewSet):
 
 
 class ReservationViewSet(viewsets.ModelViewSet):
-    queryset = Reservation.objects.all()
+    queryset = Reservation.objects.select_related("user")
     serializer_class = ReservationSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
