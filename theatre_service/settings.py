@@ -142,6 +142,8 @@ REST_FRAMEWORK = {
         "anon": "10/minute",
         "user": "30/minute"
     },
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 36,
 }
 
 SPECTACULAR_SETTINGS = {
