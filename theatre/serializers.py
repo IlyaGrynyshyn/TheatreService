@@ -70,6 +70,8 @@ class TicketSerializer(serializers.ModelSerializer):
             attrs["performance"].theatre_hall,
             ValidationError
         )
+        return data
+
     class Meta:
         model = Ticket
         fields = ("id", "row", "seat", "performance",)
