@@ -1,3 +1,4 @@
+from django.db.models import F, Count
 from rest_framework import viewsets
 
 from theatre.models import (
@@ -6,7 +7,8 @@ from theatre.models import (
     Performance,
     Actor,
     Genre,
-    Ticket
+    Ticket,
+    Reservation
 )
 from theatre.serializers import (
     PlaySerializer,
@@ -19,7 +21,8 @@ from theatre.serializers import (
     PerformanceListSerializer,
     PerformanceDetailSerializer,
     TicketSerializer,
-    TicketListSerializer
+    TicketListSerializer,
+    ReservationSerializer
 )
 
 
@@ -52,7 +55,11 @@ class TheatreHallViewSet(viewsets.ModelViewSet):
 
 class PerformanceViewSet(viewsets.ModelViewSet):
     serializer_class = PerformanceSerializer
-    queryset = Performance.objects.all()
+    queryset = Performance.objects.all().annotate(
+        tickets_available=(
+                F("theatre_hall__rows") * F("theatre_hall__seats_in_row") - Count("tickets")
+        )
+    )
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -60,6 +67,7 @@ class PerformanceViewSet(viewsets.ModelViewSet):
         if self.action == "retrieve":
             return PerformanceDetailSerializer
         return self.serializer_class
+
 
 class TicketViewSet(viewsets.ModelViewSet):
     queryset = Ticket.objects.all()
@@ -69,3 +77,15 @@ class TicketViewSet(viewsets.ModelViewSet):
         if self.action == "list":
             return TicketListSerializer
         return self.serializer_class
+
+
+class ReservationViewSet(viewsets.ModelViewSet):
+    queryset = Reservation.objects.all()
+    serializer_class = ReservationSerializer
+
+    def get_queryset(self):
+        queryset = Reservation.objects.filter(user=self.request.user)
+        return queryset
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
