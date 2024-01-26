@@ -19,8 +19,8 @@ class TheatreHall(models.Model):
 class Play(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
-    actors = models.ManyToManyField("Actor", related_name="performance")
-    genres = models.ManyToManyField("Genre", related_name="performance")
+    actors = models.ManyToManyField("Actor", related_name="performances")
+    genres = models.ManyToManyField("Genre", related_name="performances")
 
     def __str__(self):
         return self.title
@@ -30,9 +30,9 @@ class Play(models.Model):
 
 
 class Performance(models.Model):
-    play = models.ForeignKey(Play, on_delete=models.CASCADE, related_name="performance")
+    play = models.ForeignKey(Play, on_delete=models.CASCADE, related_name="performances")
     theatre_hall = models.ForeignKey(
-        TheatreHall, on_delete=models.CASCADE, related_name="performance"
+        TheatreHall, on_delete=models.CASCADE, related_name="performances"
     )
     show_time = models.DateTimeField()
 
