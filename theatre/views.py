@@ -10,7 +10,7 @@ from theatre.models import (
     Actor,
     Genre,
     Ticket,
-    Reservation
+    Reservation,
 )
 from theatre.serializers import (
     PlaySerializer,
@@ -24,7 +24,7 @@ from theatre.serializers import (
     PerformanceDetailSerializer,
     TicketSerializer,
     TicketListSerializer,
-    ReservationSerializer
+    ReservationSerializer,
 )
 
 
@@ -64,7 +64,7 @@ class PerformanceViewSet(viewsets.ModelViewSet):
 
     queryset = Performance.objects.select_related("play", "theatre_hall").annotate(
         tickets_available=(
-                F("theatre_hall__rows") * F("theatre_hall__seats_in_row") - Count("tickets")
+            F("theatre_hall__rows") * F("theatre_hall__seats_in_row") - Count("tickets")
         )
     )
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)

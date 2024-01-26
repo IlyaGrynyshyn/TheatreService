@@ -6,6 +6,7 @@ class IsAdminOrIfAuthenticatedReadOnly(BasePermission):
     Custom permission class to allow read only access for
     authenticated users, and full access for admin users.
     """
+
     def has_permission(self, request, view):
         return bool(
             (

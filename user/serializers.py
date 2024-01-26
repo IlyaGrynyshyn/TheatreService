@@ -6,8 +6,17 @@ from django.utils.translation import gettext as _
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ("id", "username", "email", "password", "is_staff",)
-        read_only_fields = ("id", "is_staff",)
+        fields = (
+            "id",
+            "username",
+            "email",
+            "password",
+            "is_staff",
+        )
+        read_only_fields = (
+            "id",
+            "is_staff",
+        )
         extra_kwargs = {"password": {"write_only": True, "min_length": 8}}
 
     def create(self, validated_data):
@@ -40,9 +49,7 @@ class AuthTokenSerializer(serializers.Serializer):
             if user:
                 if not user.is_active:
                     msg = _("User account is disabled.")
-                    raise serializers.ValidationError(
-                        msg, code="authorization"
-                    )
+                    raise serializers.ValidationError(msg, code="authorization")
             else:
                 msg = _("Unable to log in with provided credentials.")
                 raise serializers.ValidationError(msg, code="authorization")

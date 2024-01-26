@@ -4,7 +4,15 @@ API service for theatre management written on Django Rest Framework
 
 
 ## DB structure:
-![img.png](DB_structure.png)
+![img.png](img/DB_structure.png)
+
+
+## Endpoints:
+
+![img.png](img%2Fimg.png)
+![img_1.png](img%2Fimg_1.png)
+![img_2.png](img%2Fimg_2.png)
+![img_3.png](img%2Fimg_3.png)
 
 ## Features
 

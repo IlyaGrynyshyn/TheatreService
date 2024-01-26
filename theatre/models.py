@@ -3,7 +3,6 @@ from django.db import models
 from django.core.exceptions import ValidationError
 
 
-
 class TheatreHall(models.Model):
     name = models.CharField(max_length=255)
     rows = models.IntegerField()
@@ -32,14 +31,16 @@ class Play(models.Model):
 
 class Performance(models.Model):
     play = models.ForeignKey(Play, on_delete=models.CASCADE, related_name="performance")
-    theatre_hall = models.ForeignKey(TheatreHall, on_delete=models.CASCADE, related_name="performance")
+    theatre_hall = models.ForeignKey(
+        TheatreHall, on_delete=models.CASCADE, related_name="performance"
+    )
     show_time = models.DateTimeField()
 
     def __str__(self):
         return f"{self.play.title} {self.show_time}"
 
     class Meta:
-        ordering = ['-show_time']
+        ordering = ["-show_time"]
 
 
 class Actor(models.Model):
@@ -64,8 +65,12 @@ class Genre(models.Model):
 class Ticket(models.Model):
     row = models.IntegerField()
     seat = models.IntegerField()
-    performance = models.ForeignKey(Performance, on_delete=models.CASCADE, related_name="tickets")
-    reservation = models.ForeignKey("Reservation", on_delete=models.CASCADE, related_name="tickets")
+    performance = models.ForeignKey(
+        Performance, on_delete=models.CASCADE, related_name="tickets"
+    )
+    reservation = models.ForeignKey(
+        "Reservation", on_delete=models.CASCADE, related_name="tickets"
+    )
 
     @staticmethod
     def validate_ticket(row, seat, theatre_hall, error_to_raise):
@@ -78,26 +83,23 @@ class Ticket(models.Model):
                 raise error_to_raise(
                     {
                         ticket_attr_name: f"{ticket_attr_name} "
-                                          f"number must be in available range: "
-                                          f"(1, {theatre_hall_attr_name}): "
-                                          f"(1, {count_attrs})"
+                        f"number must be in available range: "
+                        f"(1, {theatre_hall_attr_name}): "
+                        f"(1, {count_attrs})"
                     }
                 )
 
     def clean(self):
         Ticket.validate_ticket(
-            self.row,
-            self.seat,
-            self.performance.theatre_hall,
-            ValidationError
+            self.row, self.seat, self.performance.theatre_hall, ValidationError
         )
 
     def save(
-            self,
-            force_insert=False,
-            force_update=False,
-            using=None,
-            update_fields=None,
+        self,
+        force_insert=False,
+        force_update=False,
+        using=None,
+        update_fields=None,
     ):
         self.full_clean()
         return super(Ticket, self).save(
@@ -105,8 +107,7 @@ class Ticket(models.Model):
         )
 
     def __str__(self):
-        return (f"{str(self.performance)} "
-                f"(row: {self.row}, seat: {self.seat})")
+        return f"{str(self.performance)} " f"(row: {self.row}, seat: {self.seat})"
 
     class Meta:
         unique_together = ("performance", "row", "seat")
@@ -115,7 +116,9 @@ class Ticket(models.Model):
 
 class Reservation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="reservations")
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="reservations"
+    )
 
     def __str__(self):
         return self.created_at
