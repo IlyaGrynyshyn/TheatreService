@@ -20,4 +20,4 @@ router.register("performance", PerformanceViewSet, basename="performance")
 router.register("tickets", TicketViewSet, basename="tickets")
 router.register("reservations", ReservationViewSet, basename="reservations")
 
-urlpatterns = [path("", include(router.urls))]
+urlpatterns = router.urls
